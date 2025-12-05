@@ -1,0 +1,20 @@
+[
+  {
+    "id": "f8fd7952-302e-4a8d-af02-2c97a9170bf5",
+    "name": "kulla",
+    "email": "dr.smith@example.com",
+    "password": "123456"
+  },
+  {
+    "id": "c54802ef-bcc5-4ee1-b3ef-89267696e839",
+    "name": "Demo User",
+    "email": "demo@local",
+    "password": "password"
+  },
+  {
+    "id": "084edeec-1757-4436-85ee-5c5acc47944e",
+    "name": "arya",
+    "email": "rohan901991@gamil.com",
+    "password": "rohan901991"
+  }
+]
