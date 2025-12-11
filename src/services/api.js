@@ -61,3 +61,10 @@ export const authAPI = {
     return response.data;
   }
 };
+
+export const usersAPI = {
+  getAll: async () => {
+    const response = await api.get('/users');
+    return response.data;
+  }
+};

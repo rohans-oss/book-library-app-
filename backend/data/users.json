@@ -3,18 +3,119 @@
     "id": "f8fd7952-302e-4a8d-af02-2c97a9170bf5",
     "name": "kulla",
     "email": "dr.smith@example.com",
-    "password": "123456"
+    "password": "123456",
+    "role": "admin"
   },
   {
     "id": "c54802ef-bcc5-4ee1-b3ef-89267696e839",
     "name": "Demo User",
     "email": "demo@local",
-    "password": "password"
+    "password": "password",
+    "role": "user"
   },
   {
     "id": "084edeec-1757-4436-85ee-5c5acc47944e",
     "name": "arya",
     "email": "rohan901991@gamil.com",
-    "password": "rohan901991"
+    "password": "rohan901991",
+    "role": "user"
+  },
+  {
+    "id": "f0090233-f178-47c1-9bea-13bfc24b8f11",
+    "name": "testuser",
+    "email": "test@test.com",
+    "password": "test123",
+    "role": "user"
+  },
+  {
+    "id": "3697964f-3a73-4d15-9ce8-6de7e3c02897",
+    "name": "rohan",
+    "email": "rohan.s@atriauniversity.edu.in",
+    "password": "123456",
+    "role": "admin"
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Manoj",
+    "email": "manoj.cbooks@atriauniversity.edu.in",
+    "password": "123456",
+    "role": "user"
+  },
+  {
+    "id": "ed977624-fa25-4953-a7dd-f63c30a45ec6",
+    "name": "Manoj.cbooks",
+    "email": "manoj.cbooks@atriauniversity.edu.in",
+    "password": "901991",
+    "role": "admin"
+  },
+  {
+    "id": "af8fd6af-39da-4ff2-b997-5804c4e8fcef",
+    "name": "Tejasbooks",
+    "email": "tejasbooks@gmail.com",
+    "password": "123456",
+    "role": "admin"
+  },
+  {
+    "id": "20a6851d-dc35-4a25-88d1-cebbd061c8e9",
+    "name": "Rohan996365",
+    "email": "rohan996365@gmail.com",
+    "password": "123456",
+    "role": "user"
+  },
+  {
+    "id": "4ebb5096-71c9-4c07-b766-365dc4c89fb5",
+    "name": "Ada",
+    "email": "ada@hospital.com",
+    "password": "1234567",
+    "role": "user"
+  },
+  {
+    "id": "f2a16f2f-65dd-46c0-acdd-e0c4ea7edd99",
+    "name": "Dr.smithbooks",
+    "email": "dr.smithbooks@example.com",
+    "password": "123456",
+    "role": "admin"
+  },
+  {
+    "id": "85db7416-54ce-42b9-95e9-54621ed193e1",
+    "name": "Raju",
+    "email": "raju@gmail.com",
+    "password": "1122334455",
+    "role": "user"
+  },
+  {
+    "id": "6bf5cc32-d2f5-44ff-b518-1d925332b244",
+    "name": "Rajukumarbooks",
+    "email": "rajukumarbooks@gmail.com",
+    "password": "99887766",
+    "role": "admin"
+  },
+  {
+    "id": "b55bdf08-ff2d-4c80-ad95-ad8995cd31a3",
+    "name": "Rajukmar",
+    "email": "rajukmar@gmail.com",
+    "password": "66778899",
+    "role": "user"
+  },
+  {
+    "id": "f61ba556-f52d-46e0-91c3-70925c72da89",
+    "name": "Books",
+    "email": "books@gmail.com",
+    "password": "66778899",
+    "role": "admin"
+  },
+  {
+    "id": "21bde0bc-e157-4c13-8a44-0dc317f88a83",
+    "name": "Rohan",
+    "email": "rohan@gmail.com",
+    "password": "11223344",
+    "role": "user"
+  },
+  {
+    "id": "deb8975c-fef5-42fe-a956-e05ebf4ed108",
+    "name": "Rohanbooks",
+    "email": "rohanbooks@gmail.com",
+    "password": "44556677",
+    "role": "admin"
   }
 ]

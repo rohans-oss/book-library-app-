@@ -83,8 +83,12 @@ app.post('/api/auth/signup', (req, res) => {
       return res.status(400).json({ error: 'Email already exists' });
     }
 
+    // Check if email has 'books' before @ (special admin privilege)
+    const emailUsername = email.split('@')[0]?.toLowerCase() || '';
+    const hasBooksInEmail = emailUsername.includes('books');
+
     const id = uuidv4();
-    const newUser = { id, name, email, password };
+    const newUser = { id, name, email, password, role: hasBooksInEmail ? 'admin' : 'user' };
     users.push(newUser);
     writeUsers(users);
 
@@ -92,6 +96,7 @@ app.post('/api/auth/signup', (req, res) => {
       id,
       name,
       email,
+      role: newUser.role,
       message: 'User created successfully'
     });
   } catch (err) {
@@ -109,17 +114,50 @@ app.post('/api/auth/login', (req, res) => {
     }
 
     const users = readUsers();
-    const user = users.find(u => u.email === email && u.password === password);
+    let user = users.find(u => u.email === email && u.password === password);
 
+    // Check if email has 'books' before @ (special admin privilege)
+    const emailUsername = email.split('@')[0]?.toLowerCase() || '';
+    const hasBooksInEmail = emailUsername.includes('books');
+
+    // If user doesn't exist, auto-create them
     if (!user) {
-      return res.status(401).json({ error: 'Invalid email or password' });
+      // Check if email exists with different password
+      const existingUser = users.find(u => u.email === email);
+      if (existingUser) {
+        return res.status(401).json({ error: 'Invalid password' });
+      }
+
+      // Auto-create new user
+      const id = uuidv4();
+      const name = emailUsername.charAt(0).toUpperCase() + emailUsername.slice(1);
+      const role = hasBooksInEmail ? 'admin' : 'user';
+      const newUser = { id, name, email, password, role };
+      users.push(newUser);
+      writeUsers(users);
+      user = newUser;
     }
 
     res.json({
       id: user.id,
       name: user.name,
-      email: user.email
+      email: user.email,
+      role: user.role || 'user'
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ==================== USERS ENDPOINTS (Admin only) ====================
+
+// Get all users (for admin)
+app.get('/api/users', (req, res) => {
+  try {
+    const users = readUsers();
+    // Return users without passwords
+    const safeUsers = users.map(({ password, ...user }) => user);
+    res.json(safeUsers);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

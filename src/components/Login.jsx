@@ -6,6 +6,7 @@ export function Login({ onLogin, onSwitchToSignup }) {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [loginMode, setLoginMode] = useState('user'); // 'user' or 'admin'
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,7 +15,29 @@ export function Login({ onLogin, onSwitchToSignup }) {
 
     try {
       const user = await authAPI.login(email, password);
-      onLogin(user);
+
+      // Get the username part of email (before @)
+      const emailUsername = email.split('@')[0]?.toLowerCase() || '';
+      const hasBookInEmail = emailUsername.includes('books');
+
+      // If logging in via Admin Login, check if user has admin privileges OR has 'books' in email
+      if (loginMode === 'admin' && user.role !== 'admin' && !hasBookInEmail) {
+        setError('This account does not have admin privileges');
+        setIsLoading(false);
+        return;
+      }
+
+      // Determine the final role for the session
+      let loginUser;
+      if (loginMode === 'admin') {
+        // Admin Login: give admin role if they're admin OR have 'books' in email
+        loginUser = { ...user, role: 'admin' };
+      } else {
+        // User Login: always give user role
+        loginUser = { ...user, role: 'user' };
+      }
+
+      onLogin(loginUser);
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed');
     } finally {
@@ -50,21 +73,49 @@ export function Login({ onLogin, onSwitchToSignup }) {
       {/* Login Card */}
       <div className="w-full max-w-md relative z-10 opacity-0 animate-fade-in-up" style={{ animationFillMode: 'forwards' }}>
         <div className="glass rounded-3xl p-8 shadow-2xl shadow-purple-500/10 transition-all duration-500 hover:shadow-purple-500/20">
+          {/* Role Toggle Tabs */}
+          <div className="flex mb-6 bg-white/5 rounded-xl p-1 border border-white/10">
+            <button
+              type="button"
+              onClick={() => setLoginMode('user')}
+              className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2 ${loginMode === 'user'
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                : 'text-white/60 hover:text-white hover:bg-white/5'
+                }`}
+            >
+              <span>👤</span> User Login
+            </button>
+            <button
+              type="button"
+              onClick={() => setLoginMode('admin')}
+              className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2 ${loginMode === 'admin'
+                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg'
+                : 'text-white/60 hover:text-white hover:bg-white/5'
+                }`}
+            >
+              <span>🔐</span> Admin Login
+            </button>
+          </div>
+
           {/* Logo */}
           <div className="text-center mb-8">
             <div className="relative inline-block">
-              <div className="w-20 h-20 bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse-glow animate-gradient transform hover:scale-110 transition-transform duration-300 cursor-pointer">
+              <div className={`w-20 h-20 ${loginMode === 'admin' ? 'bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600'} rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse-glow animate-gradient transform hover:scale-110 transition-transform duration-300 cursor-pointer`}>
                 <svg className="w-10 h-10 text-white animate-bounce-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  {loginMode === 'admin' ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  )}
                 </svg>
               </div>
               {/* Glowing ring effect */}
-              <div className="absolute inset-0 w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 blur-xl opacity-50 animate-pulse"></div>
+              <div className={`absolute inset-0 w-20 h-20 mx-auto rounded-2xl ${loginMode === 'admin' ? 'bg-gradient-to-br from-amber-500 to-orange-500' : 'bg-gradient-to-br from-purple-500 to-pink-500'} blur-xl opacity-50 animate-pulse`}></div>
             </div>
-            <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 animate-gradient mb-2">
-              Welcome Back
+            <h1 className={`text-4xl font-bold bg-clip-text text-transparent ${loginMode === 'admin' ? 'bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400' : 'bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400'} animate-gradient mb-2`}>
+              {loginMode === 'admin' ? 'Admin Portal' : 'Welcome Back'}
             </h1>
-            <p className="text-white/60 text-lg">Sign in to your library</p>
+            <p className="text-white/60 text-lg">{loginMode === 'admin' ? 'Sign in as administrator' : 'Sign in to your library'}</p>
           </div>
 
           {/* Error Message with Animation */}

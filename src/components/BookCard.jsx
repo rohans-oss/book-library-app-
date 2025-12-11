@@ -1,4 +1,4 @@
-export function BookCard({ book, currentUser, onEdit, onDelete, onToggleFavorite, onRate, onOpen }) {
+export function BookCard({ book, currentUser, isAdmin, onEdit, onDelete, onToggleFavorite, onRate, onOpen }) {
   const isFavorite = book.favorites?.includes(currentUser?.id);
   const isRead = book.readBy?.includes(currentUser?.id);
 
@@ -41,20 +41,23 @@ export function BookCard({ book, currentUser, onEdit, onDelete, onToggleFavorite
           </div>
         </div>
 
-        <div className="flex gap-2 mt-4 pt-4 border-t border-white/10">
-          <button
-            onClick={(e) => { e.stopPropagation(); onEdit(book); }}
-            className="flex-1 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-xs text-white"
-          >
-            ✏️ Edit
-          </button>
-          <button
-            onClick={(e) => { e.stopPropagation(); onDelete(book.id); }}
-            className="flex-1 py-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-xs text-red-400"
-          >
-            🗑️ Delete
-          </button>
-        </div>
+        {/* Admin-only Edit/Delete buttons */}
+        {isAdmin && (
+          <div className="flex gap-2 mt-4 pt-4 border-t border-white/10">
+            <button
+              onClick={(e) => { e.stopPropagation(); onEdit(book); }}
+              className="flex-1 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-xs text-white"
+            >
+              ✏️ Edit
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); onDelete(book.id); }}
+              className="flex-1 py-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-xs text-red-400"
+            >
+              🗑️ Delete
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { BookCard } from './BookCard';
 
-export function BookList({ books, viewMode, currentUser, onEdit, onDelete, onToggleFavorite, onRate, onOpen }) {
+export function BookList({ books, viewMode, currentUser, isAdmin, onEdit, onDelete, onToggleFavorite, onRate, onOpen }) {
   if (books.length === 0) {
     return (
       <div className="text-center py-20">
@@ -14,7 +14,7 @@ export function BookList({ books, viewMode, currentUser, onEdit, onDelete, onTog
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {books.map(book => (
-          <BookCard key={book.id} book={book} currentUser={currentUser} onEdit={onEdit} onDelete={onDelete} onToggleFavorite={onToggleFavorite} onRate={onRate} onOpen={onOpen} />
+          <BookCard key={book.id} book={book} currentUser={currentUser} isAdmin={isAdmin} onEdit={onEdit} onDelete={onDelete} onToggleFavorite={onToggleFavorite} onRate={onRate} onOpen={onOpen} />
         ))}
       </div>
     );
@@ -34,7 +34,7 @@ export function BookList({ books, viewMode, currentUser, onEdit, onDelete, onTog
             <h3 className="text-2xl font-bold text-white mb-4">{author}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {authorBooks.map(book => (
-                <BookCard key={book.id} book={book} currentUser={currentUser} onEdit={onEdit} onDelete={onDelete} onToggleFavorite={onToggleFavorite} onRate={onRate} onOpen={onOpen} />
+                <BookCard key={book.id} book={book} currentUser={currentUser} isAdmin={isAdmin} onEdit={onEdit} onDelete={onDelete} onToggleFavorite={onToggleFavorite} onRate={onRate} onOpen={onOpen} />
               ))}
             </div>
           </div>
@@ -57,7 +57,7 @@ export function BookList({ books, viewMode, currentUser, onEdit, onDelete, onTog
             <h3 className="text-2xl font-bold text-white mb-4">{year}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {booksByYear[year].map(book => (
-                <BookCard key={book.id} book={book} currentUser={currentUser} onEdit={onEdit} onDelete={onDelete} onToggleFavorite={onToggleFavorite} onRate={onRate} onOpen={onOpen} />
+                <BookCard key={book.id} book={book} currentUser={currentUser} isAdmin={isAdmin} onEdit={onEdit} onDelete={onDelete} onToggleFavorite={onToggleFavorite} onRate={onRate} onOpen={onOpen} />
               ))}
             </div>
           </div>

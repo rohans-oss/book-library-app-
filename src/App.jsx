@@ -7,6 +7,7 @@ import { AddBookModal } from './components/AddBookModal';
 import { EditBookModal } from './components/EditBookModal';
 import { BookDetailModal } from './components/BookDetailModal';
 import { BookReaderModal } from './components/BookReaderModal';
+import { UserList } from './components/UserList';
 import { booksAPI, favoritesAPI, readAPI } from './services/api';
 
 function App() {
@@ -23,8 +24,16 @@ function App() {
   const [filterRating, setFilterRating] = useState('all');
   const [showDashboard, setShowDashboard] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
+  const [showUserList, setShowUserList] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Check if current user is admin (full admin access including viewing users)
+  const isAdmin = currentUser?.role === 'admin';
+
+  // Check if user can manage books (admin OR email username before @ contains 'books')
+  const emailUsername = currentUser?.email?.split('@')[0]?.toLowerCase() || '';
+  const canManageBooks = isAdmin || emailUsername.includes('books');
 
   // Load user from localStorage
   useEffect(() => {
@@ -168,9 +177,17 @@ function App() {
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">📚</div>
             <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">Book Library</h1>
+            {isAdmin && (
+              <span className="px-2 py-1 bg-amber-500/20 text-amber-400 text-xs font-bold rounded-full">🔐 Admin</span>
+            )}
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={() => setShowDashboard(!showDashboard)} className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm">
+            {isAdmin && (
+              <button onClick={() => { setShowUserList(!showUserList); setShowDashboard(false); }} className={`px-4 py-2 rounded-lg text-sm ${showUserList ? 'bg-amber-500 text-white' : 'bg-white/10 hover:bg-white/20'}`}>
+                👥 Users
+              </button>
+            )}
+            <button onClick={() => { setShowDashboard(!showDashboard); setShowUserList(false); }} className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm">
               {showDashboard ? 'Library' : 'Dashboard'}
             </button>
             <span className="text-white/60 text-sm">Welcome, {currentUser.name}</span>
@@ -195,13 +212,17 @@ function App() {
           </div>
         ) : showDashboard ? (
           <Dashboard books={books} onClose={() => setShowDashboard(false)} />
+        ) : showUserList && isAdmin ? (
+          <UserList onClose={() => setShowUserList(false)} />
         ) : (
           <>
             {/* Toolbar */}
             <div className="flex flex-wrap gap-4 mb-8">
-              <button onClick={() => setShowAddModal(true)} className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg font-medium flex items-center gap-2">
-                ➕ Add New Book
-              </button>
+              {canManageBooks && (
+                <button onClick={() => setShowAddModal(true)} className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg font-medium flex items-center gap-2">
+                  ➕ Add New Book
+                </button>
+              )}
 
               <div className="flex bg-white/5 rounded-lg border border-white/10">
                 {['grid', 'by-author', 'by-year'].map(mode => (
@@ -248,6 +269,7 @@ function App() {
               books={filteredBooks}
               viewMode={viewMode}
               currentUser={currentUser}
+              isAdmin={canManageBooks}
               onEdit={setEditingBook}
               onDelete={handleDeleteBook}
               onToggleFavorite={handleToggleFavorite}
